@@ -4,7 +4,7 @@
  *
  * Created on 20 févr. 2014, 15:09:36
  */
-package apec_app;
+package abec_app;
 
 import java.io.File;
 import javax.swing.*;
@@ -73,7 +73,7 @@ public class Tchat extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 255));
 
         jTextArea1.setEditable(false);

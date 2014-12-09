@@ -3,20 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package apec_app;
-
+package abec_servapp;
 /**
  *
  * @author Max
  */
-public class APEC_app {
+public class ABEC_servApp {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Home home = new Home();
-        home.setVisible(true);
+        
+        int portConnexion = 30000;
+        
+        Serveur_info server = new Serveur_info(portConnexion);
+
+        ListenerSock listener;
+        listener = new ListenerSock(server);
+        listener.start();
+        
     }
     
 }
