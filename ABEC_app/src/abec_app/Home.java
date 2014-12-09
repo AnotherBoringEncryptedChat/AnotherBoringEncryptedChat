@@ -5,7 +5,6 @@
  */
 package abec_app;
 
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -48,7 +47,7 @@ public class Home extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 51, 255));
-        jLabel3.setText("Welcome on APEC Project");
+        jLabel3.setText("Welcome on ABEC Project");
 
         jButton1.setText("Connexion");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -125,15 +124,13 @@ public class Home extends javax.swing.JFrame {
       //  }
         //Creation du Client_info si la vérification mdp+login = true
         Client_info client = new Client_info();
-        client.setPseudo("Maxence");
+        
 
 //        if ((!pseudo.isEmpty() && !pseudo.equals("")) && (!str_password.isEmpty() || !str_password.equals("")) && client != null) {
                     Tchat tchat = new Tchat(client);
-                    tchat.setTitle("APEC Project");
-                    //this.setVisible(false);
-                    //this.dispose();
-                    //tchat.setLocationRelativeTo(null);
+                    tchat.setTitle("ABEC Project");
                     tchat.setVisible(true);
+                    this.dispose();
       //  } 
   //      else JOptionPane.showMessageDialog(null, "La connexion n'est pas valide.", "Information", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -167,6 +164,7 @@ public class Home extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Home().setVisible(true);
             }

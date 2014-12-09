@@ -9,7 +9,7 @@ package abec_app;
 import java.net.InetAddress;
 import java.net.Socket;
 import javax.swing.JOptionPane;
-
+import java.util.UUID;
 /**
  *
  * @author Max
@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 public class Client_info {
     private Socket socket;
     private String pseudo;
-    // On suppose que la connexion est valide -- Passe Ã  false si l'exception est levÃ©e
+    private UUID UID;
     public boolean isConnected;
     //private Tchat tchat = null;
 
@@ -27,8 +27,9 @@ public class Client_info {
             socket = new Socket("localhost", 30000);
             pseudo = null;
             isConnected = true;
+            UID = UUID.randomUUID();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Connexion au serveur impossible", "Serveur injoignable", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Connexion at the server impossible", "Injoignable Serveur ", JOptionPane.ERROR_MESSAGE);
             isConnected = false;
         }
     }
