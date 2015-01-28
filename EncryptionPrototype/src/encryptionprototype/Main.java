@@ -77,7 +77,7 @@ public class Main {
             
             
             System.out.println("The initial string was :");
-            System.out.println(readEncryptedForeignString(line,privKey));
+            System.out.println(new String(readEncryptedForeignString(line,privKey)));
         }catch(NoSuchAlgorithmException e ){
             e.printStackTrace();
         }catch(IOException e){
