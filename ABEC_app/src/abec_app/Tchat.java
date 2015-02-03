@@ -7,6 +7,9 @@
 package abec_app;
 
 import java.io.File;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.TreeMap;
 import javax.swing.*;
 
 /**
@@ -17,7 +20,9 @@ public class Tchat extends javax.swing.JFrame {
     private final Client_info client;
     private final Client_manage clientManager;
     private boolean connexionOK;
-
+    private javax.swing.JTextArea _TA_Main = new JTextArea();
+    ArrayList<JTextArea> TA_List = new ArrayList<>();
+    
     public Tchat(Client_info client) {
         System.out.println("-------Public Tchat()");
         this.client = client;
@@ -27,17 +32,19 @@ public class Tchat extends javax.swing.JFrame {
         //client.writeClient(client);
         //client.setTchat(this);
         String newConnection = "\t -- " + this.client.getPseudo() + " join the tchat --" ;
-        System.out.println("uuuuuuuuuuuuid : " + client.getUUID().toString());
-        this.clientManager.sendMessage(this.client, client.getUUID().toString());
         this.clientManager.sendMessage(this.client, client.getPseudo());
         this.clientManager.sendMessage(this.client, newConnection);
-
+        
         initComponents();
-
+        
+        //add general chat
+          
+           _tabPanel.addTab("Main",_TA_Main);
+           TA_List.add(_TA_Main);
         //jTextField2.setText(SelectionServ.hostname);
         //jTextField3.setText(String.valueOf(SelectionServ.port));
-        jTextField5.setText(client.getPseudo());
-        
+        //jLabel4.setText(client.getPseudo());
+        pseudo.setText(client.getPseudo());
         Client_Com ThClient = new Client_Com(this.client,this);
         ThClient.start();
 
@@ -56,8 +63,6 @@ public class Tchat extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
@@ -68,30 +73,17 @@ public class Tchat extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        jTextField5 = new javax.swing.JTextField();
+        pseudo = new javax.swing.JTextField();
+        _tabPanel = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 255));
-
-        jTextArea1.setEditable(false);
-        jTextArea1.setBackground(new java.awt.Color(231, 233, 241));
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Calibri Light", 0, 14)); // NOI18N
-        jTextArea1.setForeground(new java.awt.Color(7, 8, 35));
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jTextArea1.setWrapStyleWord(true);
-        jTextArea1.setMargin(new java.awt.Insets(5, 8, 5, 8));
-        jScrollPane1.setViewportView(jTextArea1);
 
         jTextField1.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         jTextField1.setMargin(new java.awt.Insets(8, 10, 8, 10));
@@ -165,9 +157,15 @@ public class Tchat extends javax.swing.JFrame {
             }
         });
 
-        jTextField5.addKeyListener(new java.awt.event.KeyAdapter() {
+        pseudo.setText("jTextField4");
+        pseudo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pseudoActionPerformed(evt);
+            }
+        });
+        pseudo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextField5KeyReleased(evt);
+                pseudoKeyReleased(evt);
             }
         });
 
@@ -212,65 +210,48 @@ public class Tchat extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Options");
-
-        jMenuItem5.setText("Change name");
-        jMenu2.add(jMenuItem5);
-
-        jMenuItem4.setText("Start a private tchat");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem4);
-
-        jMenuBar1.add(jMenu2);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 9, Short.MAX_VALUE))
-                    .addComponent(jTextField5))
-                .addGap(18, 18, 18)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                                .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                                .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(pseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
-                    .addComponent(jScrollPane1))
+                    .addComponent(_tabPanel))
                 .addGap(37, 37, 37))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
+                        .addComponent(pseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -278,13 +259,13 @@ public class Tchat extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGap(28, 28, 28)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(_tabPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -355,7 +336,7 @@ private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        jTextArea1.setText(null);
+//        jTextArea1.setText(null);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -376,26 +357,51 @@ private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             }
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jTextField5KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField5KeyReleased
-        char key = evt.getKeyChar();
-        if(key=='\n'){
-            this.client.setPseudo(jTextField5.getText());
-            System.out.println("NEW PSEUDO : " + jTextField5.getText());
-            this.clientManager.sendMessage(this.client, "--ChangeName: " + this.client.getPseudo());
+    private void pseudoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pseudoKeyReleased
+
+    if(evt.getKeyChar()=='\n'){
+    int dialogResult = JOptionPane.showConfirmDialog (null, "You are going to change your name, are you sure?","Warning",0);
+       
+        if(dialogResult==0){
+            if(pseudo.getText().trim().equals("")){
+                JOptionPane.showMessageDialog(this,"login is empty");
+                pseudo.setText(client.getPseudo());
+            }
+            else{
+            clientManager.sendMessage(client, client.getPseudo()+" changed to "+pseudo.getText());
+            client.setPseudo(pseudo.getText());
+//            jLabel4.setText(client.getPseudo());
+            
+//            clientManager.sendMessage(this.client,"--changeName:"+client.getUID+":"+client.getPseudo());
+            }
+            
         }
-    }//GEN-LAST:event_jTextField5KeyReleased
+        else if(dialogResult==1){
+            pseudo.setText(client.getPseudo());
+            
+        }
+    }
+        
+        
+    }//GEN-LAST:event_pseudoKeyReleased
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void pseudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pseudoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_pseudoActionPerformed
 
 
-    public JTextArea getJTextArea(){
-        return this.jTextArea1;
+    public JTextArea getJTextArea(int i){
+        System.out.println("---------------------- getTextArea()");
+        return this.TA_List.get(i);
     }
     
+    public JTextArea getJTextArea(){
+        System.out.println("---------------------- getTextArea()");
+        return this.TA_List.get(0);
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTabbedPane _tabPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -404,19 +410,14 @@ private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField pseudo;
     // End of variables declaration//GEN-END:variables
 }
