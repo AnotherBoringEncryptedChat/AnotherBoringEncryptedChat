@@ -38,12 +38,12 @@ public class Tchat extends javax.swing.JFrame {
         initComponents();
         
         //add general chat
-          
-           _tabPanel.addTab("Main",_TA_Main);
-           TA_List.add(_TA_Main);
-        //jTextField2.setText(SelectionServ.hostname);
-        //jTextField3.setText(String.valueOf(SelectionServ.port));
-        //jLabel4.setText(client.getPseudo());
+        
+        _tabPanel.addTab("Main",_TA_Main);
+        TA_List.add(_TA_Main);
+        
+        //set pseudo textbox
+        
         pseudo.setText(client.getPseudo());
         Client_Com ThClient = new Client_Com(this.client,this);
         ThClient.start();
