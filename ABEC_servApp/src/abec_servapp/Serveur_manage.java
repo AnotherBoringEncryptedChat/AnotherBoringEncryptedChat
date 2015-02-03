@@ -7,6 +7,7 @@ package abec_servapp;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.UUID;
 
 /**
  *
@@ -21,7 +22,7 @@ public class Serveur_manage {
             System.out.println("---------------------- sendMessage();");
             OutputStream out = null;
             DataOutputStream sortie = null;
-            for (Integer i : server.getHashMap().keySet()) {
+            for (UUID i : server.getHashMap().keySet()) {
                 Socket socket_transfert = server.getHashMap().get(i).getSocket();
                 // RÃ©cupÃ©ration du flot de sortie
                 // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
@@ -38,7 +39,7 @@ public class Serveur_manage {
 
     public void sendFile(Serveur_info server,Client_info client,byte b[] ) {
         System.out.println("---------------------- sendFile()");
-        for (Integer i : server.getHashMap().keySet()) {
+        for (UUID i : server.getHashMap().keySet()) {
             if (i != client.getNumClient()){
                 OutputStream out = null;
                 Socket socket_transfert = server.getHashMap().get(i).getSocket();
@@ -64,7 +65,7 @@ public class Serveur_manage {
         System.out.println("---------------------- sendFileInfo()");
         System.out.println("Broadcast file > " + nom + " to :");
         try {
-            for (Integer i : server.getHashMap().keySet()) {
+            for (UUID i : server.getHashMap().keySet()) {
                 if (i != client.getNumClient()) {
                     System.out.println("\t " + client.getPseudo());
                     // RÃ©cupÃ©ration du flot de sortie

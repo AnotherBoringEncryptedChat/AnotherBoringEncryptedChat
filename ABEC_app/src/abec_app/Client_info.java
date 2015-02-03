@@ -35,6 +35,9 @@ public class Client_info {
     }
 ////////////////////////////////////////////////////////////////////////////////
 
+    public UUID getUUID(){
+        return UID;
+}
     public void setPseudo(String p) {
         pseudo = p;
     }

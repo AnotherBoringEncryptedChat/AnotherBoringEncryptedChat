@@ -5,6 +5,7 @@
  */
 package abec_servapp;
 import java.net.*;
+import java.util.UUID;
 
 /**
  *
@@ -12,15 +13,18 @@ import java.net.*;
  */
 public class Client_info {
     
-    private static int num = 0;
-    private final int numClient;
+    private UUID numClient;
     private Socket socket;
     private String pseudo;
     private boolean connexionOK;
     
     public Client_info(){
-        numClient = ++num;
+        numClient = null;
         connexionOK = false;
+    }
+    
+    public void setNumClient(UUID id){
+        this.numClient = id;
     }
     
     public void setConnexion(boolean statut){
@@ -31,7 +35,7 @@ public class Client_info {
         return this.connexionOK;
     }
     
-    public int getNumClient(){
+    public UUID getNumClient(){
         return numClient;
     }
     

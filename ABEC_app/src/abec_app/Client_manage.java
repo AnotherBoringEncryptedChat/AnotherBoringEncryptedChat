@@ -25,7 +25,7 @@ public class Client_manage{
             OutputStream out = client.getSocket().getOutputStream();
             DataOutputStream sortie = new DataOutputStream(out);
 
-            if (!msg.isEmpty()) sortie.writeUTF(msg);
+            if (!msg.isEmpty()) sortie.writeUTF(client.getPseudo() + msg);
             System.out.println("Send :   " + msg);
         } catch (Exception e) {
             e.printStackTrace(System.out);

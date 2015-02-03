@@ -7,16 +7,14 @@ package abec_servapp;
 import java.net.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.io.IOException;
+import java.util.UUID;
 
-/**
- *
- * @author Max
- */
+
 public class Serveur_info {
     
     //private int nbClient;
     private ServerSocket listenerSocket;
-    private ConcurrentHashMap<Integer, Client_info> tabClients;
+    private ConcurrentHashMap<UUID, Client_info> tabClients;
     private boolean connexionOK;
     
     public Serveur_info(int p){
@@ -37,7 +35,7 @@ public class Serveur_info {
         }
     }
     
-    public ConcurrentHashMap<Integer,Client_info> getHashMap(){
+    public ConcurrentHashMap<UUID,Client_info> getHashMap(){
         return this.tabClients;
     }
     
