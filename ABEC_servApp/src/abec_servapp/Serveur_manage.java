@@ -29,7 +29,38 @@ public class Serveur_manage {
                     out = socket_transfert.getOutputStream();
                     sortie = new DataOutputStream(out);
                     if (server.getHashMap().size() <= 1 && !msg.isEmpty()) msg = "--popup:Nobody";
-                    sortie.writeUTF(msg);
+                    try{
+                        byte[] msg_bytes = EncryptionKeys.encrypt(msg.getBytes(), client.getPk());
+                        msg = new String(msg_bytes);
+                        sortie.writeUTF(msg);
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }catch(IOException e){ e.printStackTrace(System.out);}
+            }
+        System.out.println("Broadcast > " + msg);
+
+    }
+        
+        public void sendMessageUnencrypted(Serveur_info server, Client_info client, String msg) {
+            System.out.println("---------------------- sendMessage();");
+            OutputStream out = null;
+            DataOutputStream sortie = null;
+            for (Integer i : server.getHashMap().keySet()) {
+                Socket socket_transfert = server.getHashMap().get(i).getSocket();
+                // RÃ©cupÃ©ration du flot de sortie
+                // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                try{
+                    out = socket_transfert.getOutputStream();
+                    sortie = new DataOutputStream(out);
+                    if (server.getHashMap().size() <= 1 && !msg.isEmpty()) msg = "--popup:Nobody";
+                    try{
+                        sortie.writeUTF(msg);
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }catch(IOException e){ e.printStackTrace(System.out);}
             }
         System.out.println("Broadcast > " + msg);

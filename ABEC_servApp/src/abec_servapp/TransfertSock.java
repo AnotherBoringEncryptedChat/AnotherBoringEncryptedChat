@@ -8,6 +8,8 @@ package abec_servapp;
 import java.io.DataInputStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 /**
  *
  * @author Max
@@ -27,35 +29,62 @@ public class TransfertSock extends Thread {
     
     @Override
     public void run(){
-        System.out.println("---------------------- Procédure principale du Thread de gestion de transfert socket");
+        System.out.println("---------------------- Main transfer Socket Thread");
 
         Serveur_manage serverManage = new Serveur_manage();
         InputStream in = null;
         DataInputStream entree = null;
+        getClientPublicKey();
+        sendMyPublicKey(serverManage);
+        
         while(client.getConnexion()){
             try {
                 in = client.getSocket().getInputStream();
                 entree = new DataInputStream(in);
+                String readMsg = entree.readUTF();
+                /*
+                Debug
+                */
+                System.out.println("Entry Message : "+readMsg);
+                /*
+                Debug
+                */
+                
                 String msg;
-                msg = entree.readUTF();
-                // FIRST CONNEXION OF THE CLIEN
-                if (!msg.contains("--Send file :")) {
-                    serverManage.sendMessage(this.server, this.client, msg);
-                    System.out.println("Send :   " + msg);
-                }
-                else{
-                    serverManage.sendMessage(server, client, msg);
-                    //RECUPERATION NOM FICHIER
-                    String fileName = entree.readUTF();
-                    serverManage.sendFileInfo(fileName, client, server);
-                    String fileSize = entree.readUTF();
-                    serverManage.sendFileInfo(fileSize,client, server);
-                    byte b[] = new byte[Integer.valueOf(fileSize)];
-                    try{
-                        entree.read(b, 0, Integer.valueOf(fileSize));
-                        serverManage.sendFile(server, client, b);
-                    }catch(IOException e){ e.printStackTrace(System.out);}
+                try{
+                    byte[] decryptedMsg = EncryptionKeys.decrypt(readMsg.getBytes(), server.getKeys().getPrivate());
+                    msg = new String(decryptedMsg);
+                    
+                    /*
+                    DEBUG
+                    */
+                    System.out.println(msg);
+                    /*
+                    DEBUG
+                    */
+                    
+                    // FIRST CONNEXION OF THE CLIEN
+                    if (!msg.contains("--Send file :")) {
+                        serverManage.sendMessage(this.server, this.client, msg);
+                        System.out.println("Send :   " + msg);
+                    }
+                    else{
+                         serverManage.sendMessage(server, client, msg);
 
+                        //RECUPERATION NOM FICHIER
+                        String fileName = entree.readUTF();
+                        serverManage.sendFileInfo(fileName, client, server);
+                        String fileSize = entree.readUTF();
+                        serverManage.sendFileInfo(fileSize,client, server);
+                        byte b[] = new byte[Integer.valueOf(fileSize)];
+                        try{
+                            entree.read(b, 0, Integer.valueOf(fileSize));
+                            serverManage.sendFile(server, client, b);
+                        }catch(IOException e){ e.printStackTrace(System.out);}
+
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
             }catch (IOException e) {
                 e.printStackTrace(System.out);
@@ -68,5 +97,30 @@ public class TransfertSock extends Thread {
             if (entree != null) entree.close();
             client.getSocket().close();
         }catch(IOException e){e.printStackTrace(System.out);}
+    }
+    
+    
+    public void getClientPublicKey(){
+        if(client.getConnexion()){
+            InputStream in = null;
+            DataInputStream entree = null;
+            try{
+                in = client.getSocket().getInputStream();
+                entree = new DataInputStream(in);
+                byte[] readMsg = entree.readUTF().getBytes();
+                client.setPk(EncryptionKeys.getPublicKeyFromByteArray(readMsg));
+            }catch(NoSuchAlgorithmException | InvalidKeySpecException | IOException e)
+            {
+                client.setConnexion(false);
+                e.printStackTrace();
+            }
+        }
+    } 
+    
+    public void sendMyPublicKey(Serveur_manage server_manage){
+        
+        if(client.getConnexion()){
+            server_manage.sendMessageUnencrypted(server, client, new String(ABEC_servApp.server.getKeys().getPublic().getEncoded()));
+        }
     }
 }

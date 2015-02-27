@@ -5,6 +5,7 @@
  */
 package abec_servapp;
 import java.net.*;
+import java.security.PublicKey;
 
 /**
  *
@@ -17,6 +18,7 @@ public class Client_info {
     private Socket socket;
     private String pseudo;
     private boolean connexionOK;
+    private PublicKey pk;
     
     public Client_info(){
         numClient = ++num;
@@ -49,5 +51,13 @@ public class Client_info {
     
     public void setSocket(Socket s){
         this.socket = s;
+    }
+
+    public PublicKey getPk() {
+        return pk;
+    }
+
+    public void setPk(PublicKey pk) {
+        this.pk = pk;
     }
 }
