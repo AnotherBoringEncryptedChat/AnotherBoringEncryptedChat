@@ -44,6 +44,12 @@ public class TransfertSock extends Thread {
                     System.out.println("Send :   " + msg);
                 }
                 else if (msg.contains("--ChangeName:")){this.server.getHashMap().get(client.getNumClient()).setPseudo(msg.substring(12));}
+                else if (msg.contains(" --getUserList:")){
+                	serverManage.sendMessage(server, client, String.valueOf(this.server.getHashMap().size()));
+                	for(Client_info cli : this.server.getHashMap().values()){
+                		serverManage.sendMessage(server, cli, cli.getPseudo());
+                	}
+                }
                 else{
                     serverManage.sendMessage(server, client, msg);
                     //RECUPERATION NOM FICHIER

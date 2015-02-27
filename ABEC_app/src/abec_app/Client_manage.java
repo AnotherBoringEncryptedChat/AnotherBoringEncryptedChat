@@ -25,7 +25,8 @@ public class Client_manage{
             OutputStream out = client.getSocket().getOutputStream();
             DataOutputStream sortie = new DataOutputStream(out);
 
-            if (!msg.isEmpty()) sortie.writeUTF(client.getPseudo() + msg);
+//            if (!msg.isEmpty()) sortie.writeUTF(client.getPseudo() + msg);
+            if (!msg.isEmpty()) sortie.writeUTF(msg);
             System.out.println("Send :   " + msg);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -54,6 +55,8 @@ public class Client_manage{
             FileInputStream fo = new FileInputStream(f);
 
             if (f.length() <= TAILLE_MAX) {
+            	System.out.println(f.getName());
+            	System.out.println(f.length());
                 out.writeUTF("--Send file :");
                 out.writeUTF(f.getName());
                 out.writeLong(f.length());

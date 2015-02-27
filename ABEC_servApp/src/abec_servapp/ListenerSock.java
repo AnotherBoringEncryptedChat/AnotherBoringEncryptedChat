@@ -47,6 +47,7 @@ public class ListenerSock extends Thread{
         try {
             InputStream in = transfer_socket.getInputStream();
             DataInputStream sortie = new DataInputStream(in);
+//            System.out.println(sortie.readUTF());
             UUID uuid = UUID.fromString(sortie.readUTF());
             System.out.println("uuid :"+ uuid.toString());
             String pseudo = sortie.readUTF();
