@@ -5,6 +5,7 @@
  */
 package abec_servapp;
 import java.net.*;
+import java.security.PublicKey;
 import java.util.UUID;
 
 /**
@@ -13,18 +14,17 @@ import java.util.UUID;
  */
 public class Client_info {
     
-    private UUID numClient;
+    private static int num = 0;
+    private final int numClient;
     private Socket socket;
     private String pseudo;
     private boolean connexionOK;
+    private PublicKey pk;
+    private UUID uuid;
     
     public Client_info(){
-        numClient = null;
+        numClient = ++num;
         connexionOK = false;
-    }
-    
-    public void setNumClient(UUID id){
-        this.numClient = id;
     }
     
     public void setConnexion(boolean statut){
@@ -36,7 +36,7 @@ public class Client_info {
     }
     
     public UUID getNumClient(){
-        return numClient;
+        return uuid;
     }
     
     public String getPseudo(){
@@ -54,4 +54,17 @@ public class Client_info {
     public void setSocket(Socket s){
         this.socket = s;
     }
+
+    public PublicKey getPk() {
+        return pk;
+    }
+
+    public void setPk(PublicKey pk) {
+        this.pk = pk;
+    }
+
+	public void setNumClient(UUID uuid2) {
+		// TODO Auto-generated method stub
+		
+	}
 }
