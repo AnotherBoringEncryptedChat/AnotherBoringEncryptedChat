@@ -116,6 +116,7 @@ public class TransfertSock extends Thread {
                 in = client.getSocket().getInputStream();
                 entree = new DataInputStream(in);
                 byte[] readMsg = entree.readUTF().getBytes();
+                System.out.println(readMsg.toString());
                 client.setPk(EncryptionKeys.getPublicKeyFromByteArray(readMsg));
             }catch(NoSuchAlgorithmException | InvalidKeySpecException | IOException e)
             {

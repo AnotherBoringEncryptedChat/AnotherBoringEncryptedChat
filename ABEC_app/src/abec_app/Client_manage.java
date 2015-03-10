@@ -6,14 +6,20 @@
 package abec_app;
 
 import java.io.*;
+import java.security.KeyPair;
+
 import javax.swing.*;
+
+
 
 /**
  *
  * @author Max
  */
 public class Client_manage{
-    
+	
+	private KeyPair keys;
+	
     public Client_manage(){}
     
     ////////////////////////////////////////////////////////////////////////////////
@@ -106,4 +112,20 @@ public class Client_manage{
             System.out.println("File received for : " + client.getPseudo());
         }
     }
+
+	public void sendUnencryptedMessage(Client_info client, String msg) {
+        System.out.println("---------------------- sendMessage()");
+        try {
+            // Recuperation of output stream
+            OutputStream out = client.getSocket().getOutputStream();
+            DataOutputStream sortie = new DataOutputStream(out);
+
+//            if (!msg.isEmpty()) sortie.writeUTF(client.getPseudo() + msg);
+            if (!msg.isEmpty()) sortie.writeUTF(msg);
+            System.out.println("Send :   " + msg);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+		
+	}
 }

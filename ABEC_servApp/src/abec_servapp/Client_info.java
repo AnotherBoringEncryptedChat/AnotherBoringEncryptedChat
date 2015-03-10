@@ -64,7 +64,7 @@ public class Client_info {
     }
 
 	public void setNumClient(UUID uuid2) {
-		// TODO Auto-generated method stub
+		this.uuid = uuid2;
 		
 	}
 }

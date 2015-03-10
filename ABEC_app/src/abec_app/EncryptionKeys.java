@@ -1,4 +1,4 @@
-package abec_servapp;
+package abec_app;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

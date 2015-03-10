@@ -34,7 +34,7 @@ public class ListenerSock extends Thread{
             }catch(IOException e){e.printStackTrace(System.out);}
             Client_info client = new Client_info();
             client.setSocket(transfer_socket);
-            this.getNameInInputClient(client);
+            client = this.getNameInInputClient(client);
             this.serveur.getHashMap().put(client.getNumClient(),client);
             System.out.println(" HASHMAP.put(client)");        
             TransfertSock ThTransfert = new TransfertSock(this.serveur, client);

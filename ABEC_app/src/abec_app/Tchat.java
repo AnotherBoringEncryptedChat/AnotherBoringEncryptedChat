@@ -41,8 +41,11 @@ public class Tchat extends javax.swing.JFrame {
         //client.setTchat(this);
         String newConnection = "\t -- " + this.client.getPseudo() + " join the tchat --" ;
         System.out.print(client.getUUID().toString());
-        this.clientManager.sendMessage(this.client, client.getUUID().toString());
-        this.clientManager.sendMessage(this.client, client.getPseudo());
+ 
+        this.clientManager.sendUnencryptedMessage(this.client, client.getUUID().toString());
+        this.clientManager.sendUnencryptedMessage(this.client, client.getPseudo());
+        this.clientManager.sendUnencryptedMessage(this.client, new String(client.getKeys().getPublic().getEncoded()));
+        
         this.clientManager.sendMessage(this.client, newConnection);
         
         initComponents();
