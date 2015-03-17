@@ -7,7 +7,18 @@
 package abec_app;
 
 import java.io.File;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.TreeMap;
 import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Fenêtre de tchat principale
@@ -17,7 +28,9 @@ public class Tchat extends javax.swing.JFrame {
     private final Client_info client;
     private final Client_manage clientManager;
     private boolean connexionOK;
-
+    private javax.swing.JTextArea _TA_Main = new JTextArea();
+    ArrayList<JTextArea> TA_List = new ArrayList<>();
+    
     public Tchat(Client_info client) {
         System.out.println("-------Public Tchat()");
         this.client = client;
@@ -27,14 +40,26 @@ public class Tchat extends javax.swing.JFrame {
         //client.writeClient(client);
         //client.setTchat(this);
         String newConnection = "\t -- " + this.client.getPseudo() + " join the tchat --" ;
-        this.clientManager.sendMessage(this.client, client.getPseudo());
+        System.out.print(client.getUUID().toString());
+ 
+        this.clientManager.sendUnencryptedMessage(this.client, client.getUUID().toString());
+        this.clientManager.sendUnencryptedMessage(this.client, client.getPseudo());
+        this.clientManager.sendUnencryptedMessage(this.client, new String(client.getKeys().getPublic().getEncoded()));
+        
         this.clientManager.sendMessage(this.client, newConnection);
-
+        
         initComponents();
-
-        //jTextField2.setText(SelectionServ.hostname);
-        //jTextField3.setText(String.valueOf(SelectionServ.port));
-        jLabel4.setText(client.getPseudo());
+        _TA_Main.setPreferredSize(new Dimension(360, 500));
+        _TA_Main.setSize(new Dimension(99, 100));
+        
+        //add general chat
+        
+        _tabPanel.addTab("Main",_TA_Main);
+        TA_List.add(_TA_Main);
+        
+        //set pseudo textbox
+        
+        pseudo.setText(client.getPseudo());
         Client_Com ThClient = new Client_Com(this.client,this);
         ThClient.start();
 
@@ -53,19 +78,14 @@ public class Tchat extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
+        pseudo = new javax.swing.JTextField();
+        _tabPanel = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -75,17 +95,6 @@ public class Tchat extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 255));
-
-        jTextArea1.setEditable(false);
-        jTextArea1.setBackground(new java.awt.Color(231, 233, 241));
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Calibri Light", 0, 14)); // NOI18N
-        jTextArea1.setForeground(new java.awt.Color(7, 8, 35));
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jTextArea1.setWrapStyleWord(true);
-        jTextArea1.setMargin(new java.awt.Insets(5, 8, 5, 8));
-        jScrollPane1.setViewportView(jTextArea1);
 
         jTextField1.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         jTextField1.setMargin(new java.awt.Insets(8, 10, 8, 10));
@@ -103,22 +112,6 @@ public class Tchat extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Serveur :");
-
-        jTextField2.setEditable(false);
-        jTextField2.setFont(new java.awt.Font("Calibri", 0, 10)); // NOI18N
-        jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-
-        jLabel3.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Port : ");
-
-        jTextField3.setEditable(false);
-        jTextField3.setFont(new java.awt.Font("Calibri", 0, 10)); // NOI18N
-        jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-
         jButton1.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         jButton1.setText("Envoyer");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -128,7 +121,7 @@ public class Tchat extends javax.swing.JFrame {
         });
 
         jButton2.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jButton2.setText("Vider la conversation");
+        jButton2.setText("Clear Chat");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -144,23 +137,30 @@ public class Tchat extends javax.swing.JFrame {
         });
 
         jButton3.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jButton3.setText("Envoyer un bip");
+        jButton3.setText("A bip");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Broadway BT", 0, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(153, 153, 255));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(153, 153, 255), new java.awt.Color(204, 204, 255)));
-
         jButton5.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jButton5.setText("Envoyer un fichier");
+        jButton5.setText("Send a file");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
+            }
+        });
+
+        pseudo.setText("jTextField4");
+        pseudo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pseudoActionPerformed(evt);
+            }
+        });
+        pseudo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                pseudoKeyReleased(evt);
             }
         });
 
@@ -206,71 +206,76 @@ public class Tchat extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
+        
+        JButton btnPrivateChat = new JButton("Private Chat");
+        
+        btnPrivateChat.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		System.out.println("clicked");
+        	}
+        });
+        
+        btnPrivateChat.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		clientManager.sendMessage(client, " --getUserList:");
+        		int nbUser = Integer.valueOf(clientManager.ReceiveMessage(client));
+        		
+        	}
+        });
+        
+        btnPrivateChat.setFont(new Font("Dialog", Font.PLAIN, 12));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addComponent(jScrollPane1))
-                .addGap(37, 37, 37))
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(layout.createParallelGroup(Alignment.TRAILING, false)
+        					.addComponent(pseudo, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+        					.addGroup(layout.createSequentialGroup()
+        						.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE)
+        						.addGap(20)))
+        				.addGroup(layout.createParallelGroup(Alignment.TRAILING, false)
+        					.addComponent(btnPrivateChat, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(jButton5, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(jButton2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+        					.addComponent(jButton3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+        				.addGroup(layout.createSequentialGroup()
+        					.addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(jButton1))
+        				.addComponent(_tabPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(37))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                        .addComponent(jButton4))
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(43, 43, 43))
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addGap(23)
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(layout.createSequentialGroup()
+        					.addComponent(pseudo, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+        					.addGap(44)
+        					.addComponent(btnPrivateChat)
+        					.addGap(46)
+        					.addComponent(jButton2)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(jButton3)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(jButton5))
+        				.addComponent(_tabPanel, GroupLayout.PREFERRED_SIZE, 356, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18, 18, Short.MAX_VALUE)
+        			.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+        				.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        					.addComponent(jTextField1, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+        					.addComponent(jButton4))
+        				.addComponent(jButton1, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+        			.addGap(43))
         );
+        getContentPane().setLayout(layout);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -333,7 +338,7 @@ private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        jTextArea1.setText(null);
+       _TA_Main.setText(null);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -354,32 +359,62 @@ private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void pseudoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pseudoKeyReleased
 
-    public JTextArea getJTextArea(){
+    if(evt.getKeyChar()=='\n'){
+    int dialogResult = JOptionPane.showConfirmDialog (null, "You are going to change your name, are you sure?","Warning",0);
+       
+        if(dialogResult==0){
+            if(pseudo.getText().trim().equals("")){
+                JOptionPane.showMessageDialog(this,"login is empty");
+                pseudo.setText(client.getPseudo());
+            }
+            else{
+            clientManager.sendMessage(client, client.getPseudo()+" changed to "+pseudo.getText());
+            client.setPseudo(pseudo.getText());
+//            jLabel4.setText(client.getPseudo());
+            
+//            clientManager.sendMessage(this.client,"--changeName:"+client.getUID+":"+client.getPseudo());
+            }
+            
+        }
+        else if(dialogResult==1){
+            pseudo.setText(client.getPseudo());
+            
+        }
+    }
+        
+        
+    }//GEN-LAST:event_pseudoKeyReleased
+
+    private void pseudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pseudoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pseudoActionPerformed
+
+
+    public JTextArea getJTextArea(int i){
         System.out.println("---------------------- getTextArea()");
-        return this.jTextArea1;
+        return this.TA_List.get(i);
     }
     
+    public JTextArea getJTextArea(){
+        System.out.println("---------------------- getTextArea()");
+        return this.TA_List.get(0);
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTabbedPane _tabPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    // End of variables declaration//GEN-END:variables
+    private javax.swing.JTextField pseudo;
 }

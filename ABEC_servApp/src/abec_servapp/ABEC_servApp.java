@@ -10,6 +10,8 @@ package abec_servapp;
  */
 public class ABEC_servApp {
 
+    
+    static Serveur_info server;
     /**
      * @param args the command line arguments
      */
@@ -17,7 +19,7 @@ public class ABEC_servApp {
         
         int portConnexion = 30000;
         
-        Serveur_info server = new Serveur_info(portConnexion);
+        server = new Serveur_info(portConnexion);
 
         ListenerSock listener;
         listener = new ListenerSock(server);

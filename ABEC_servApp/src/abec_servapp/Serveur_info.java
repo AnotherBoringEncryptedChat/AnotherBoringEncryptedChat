@@ -4,9 +4,12 @@
  * and open the template in the editor.
  */
 package abec_servapp;
-import java.net.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.io.IOException;
+import java.net.*;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -16,8 +19,9 @@ public class Serveur_info {
     
     //private int nbClient;
     private ServerSocket listenerSocket;
-    private ConcurrentHashMap<Integer, Client_info> tabClients;
+    private ConcurrentHashMap<UUID, Client_info> tabClients;
     private boolean connexionOK;
+    private KeyPair keys;
     
     public Serveur_info(int p){
         
@@ -27,6 +31,7 @@ public class Serveur_info {
         listenerSocket = new ServerSocket(p);
         tabClients = new ConcurrentHashMap<>();
         connexionOK = true;
+        keys = EncryptionKeys.keyPairGenerator();
         }catch (BindException e) {
             connexionOK = false;
             System.out.println("Error : Un serveur est déjà lancé !");
@@ -34,15 +39,36 @@ public class Serveur_info {
         }catch(IOException e){
             connexionOK = false;
             e.printStackTrace(System.out);
+        }catch(NoSuchAlgorithmException e ){
+            connexionOK = false;
+            e.printStackTrace();
+        }
+        catch(Exception e){
+            connexionOK = false;
+            e.printStackTrace();
         }
     }
     
-    public ConcurrentHashMap<Integer,Client_info> getHashMap(){
+    public ConcurrentHashMap<UUID,Client_info> getHashMap(){
         return this.tabClients;
     }
     
     public ServerSocket getServerSocket(){
         return this.listenerSocket;
+    }
+
+    /**
+     * @return the keys
+     */
+    public KeyPair getKeys() {
+        return keys;
+    }
+
+    /**
+     * @param keys the keys to set
+     */
+    public void setKeys(KeyPair keys) {
+        this.keys = keys;
     }
 
 }
