@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package abec_servapp;
+package abec.servapp;
 import java.net.*;
 import java.io.*;
 import java.util.UUID;
@@ -32,6 +32,7 @@ public class ListenerSock extends Thread{
                 transfer_socket = this.serveur.getServerSocket().accept();
                 System.out.println("CONNEXION CLIENT");
             }catch(IOException e){e.printStackTrace(System.out);}
+            
             Client_info client = new Client_info();
             client.setSocket(transfer_socket);
             client = this.getNameInInputClient(client);

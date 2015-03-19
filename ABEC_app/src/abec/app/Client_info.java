@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package abec_app;
+package abec.app;
 
 
+import abec.encryption.EncryptionKeys;
 import java.net.InetAddress;
 import java.net.Socket;
 import javax.swing.JOptionPane;
 import java.security.KeyPair;
 import java.util.UUID;
+
 /**
  *
  * @author Max

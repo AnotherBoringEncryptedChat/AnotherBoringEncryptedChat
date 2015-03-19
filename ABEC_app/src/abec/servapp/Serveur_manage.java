@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package abec_servapp;
+package abec.servapp;
 
+import abec.encryption.EncryptionKeys;
 import java.io.*;
 import java.net.Socket;
 import java.util.UUID;
@@ -24,8 +25,8 @@ public class Serveur_manage {
             DataOutputStream sortie = null;
             for (UUID i : server.getHashMap().keySet()) {
                 Socket socket_transfert = server.getHashMap().get(i).getSocket();
-                // RÃ©cupÃ©ration du flot de sortie
-                // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                // Récupécration du flot de sortie
+                // Création du flot d'entrée pour données typées 
                 try{
                     out = socket_transfert.getOutputStream();
                     sortie = new DataOutputStream(out);
@@ -45,13 +46,13 @@ public class Serveur_manage {
     }
         
         public void sendMessageUnencrypted(Serveur_info server, Client_info client, String msg) {
-            System.out.println("---------------------- sendMessage();");
+            System.out.println("---------------------- sendMessageUnencrypted();");
             OutputStream out = null;
             DataOutputStream sortie = null;
             for (UUID i : server.getHashMap().keySet()) {
                 Socket socket_transfert = server.getHashMap().get(i).getSocket();
-                // RÃ©cupÃ©ration du flot de sortie
-                // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                // Récupération  du flot de sortie
+                // CrÃ©ation du flot d'entrée pour données typées 
                 try{
                     out = socket_transfert.getOutputStream();
                     sortie = new DataOutputStream(out);
@@ -81,7 +82,7 @@ public class Serveur_manage {
                     System.out.println("Problème Broadcasting de message (Byte-Type");
                     e.printStackTrace(System.out);
                 }
-                // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                // Création du flot d'entrée pour données typées 
                 DataOutputStream sortie = new DataOutputStream(out);
                 try{
                     sortie.write(b);
@@ -99,9 +100,9 @@ public class Serveur_manage {
             for (UUID i : server.getHashMap().keySet()) {
                 if (i != client.getNumClient()) {
                     System.out.println("\t " + client.getPseudo());
-                    // RÃ©cupÃ©ration du flot de sortie
+                    // Récupération du flot de sortie
                     OutputStream out = server.getHashMap().get(i).getSocket().getOutputStream();
-                    // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                    // Création du flot d'entrée pour données typées 
                     DataOutputStream sortie = new DataOutputStream(out);
                     sortie.writeUTF(nom);
                     sortie.close();

@@ -4,7 +4,7 @@
  *
  * Created on 20 févr. 2014, 15:09:36
  */
-package abec_app;
+package abec.app;
 
 import java.io.File;
 import java.util.AbstractMap;
@@ -44,6 +44,7 @@ public class Tchat extends javax.swing.JFrame {
  
         this.clientManager.sendUnencryptedMessage(this.client, client.getUUID().toString());
         this.clientManager.sendUnencryptedMessage(this.client, client.getPseudo());
+        this.clientManager.sendUnencryptedMessage(this.client, "test chaine claire");
         this.clientManager.sendUnencryptedMessage(this.client, new String(client.getKeys().getPublic().getEncoded()));
         
         this.clientManager.sendMessage(this.client, newConnection);
@@ -402,7 +403,7 @@ private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         return this.TA_List.get(0);
     }
     
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JTabbedPane _tabPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

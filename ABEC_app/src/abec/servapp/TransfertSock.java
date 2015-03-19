@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package abec_servapp;
+package abec.servapp;
 
+import abec.encryption.EncryptionKeys;
 import java.io.DataInputStream;
 import java.io.InputStream;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class TransfertSock extends Thread {
                     DEBUG
                     */
                     
-                    // FIRST CONNEXION OF THE CLIEN
+                    // FIRST CONNEXION OF THE CLIENT
                     if (!msg.contains("--Send file :")) {
                         serverManage.sendMessage(this.server, this.client, msg);
                         System.out.println("Send :   " + msg);
@@ -115,8 +116,9 @@ public class TransfertSock extends Thread {
             try{
                 in = client.getSocket().getInputStream();
                 entree = new DataInputStream(in);
-                byte[] readMsg = entree.readUTF().getBytes();
-                System.out.println(readMsg.toString());
+                String messageAsString = entree.readUTF();
+                byte[] readMsg = messageAsString.getBytes();
+                System.out.println("client public key -> "+ messageAsString );
                 client.setPk(EncryptionKeys.getPublicKeyFromByteArray(readMsg));
             }catch(NoSuchAlgorithmException | InvalidKeySpecException | IOException e)
             {
@@ -129,7 +131,7 @@ public class TransfertSock extends Thread {
     public void sendMyPublicKey(Serveur_manage server_manage){
         
         if(client.getConnexion()){
-            server_manage.sendMessageUnencrypted(server, client, new String(ABEC_servApp.server.getKeys().getPublic().getEncoded()));
+            server_manage.sendMessageUnencrypted(server, client, new String(server.getKeys().getPublic().getEncoded()));
         }
     }
 }

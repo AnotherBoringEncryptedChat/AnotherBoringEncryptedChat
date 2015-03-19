@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package abec_servapp;
+package abec.servapp;
 import java.net.*;
 import java.security.PublicKey;
 import java.util.UUID;
@@ -15,7 +15,11 @@ import java.util.UUID;
 public class Client_info {
     
     private static int num = 0;
+    
+    //Cette variable est marquée comme inutilisée,
+    // ON LA GARDE ?
     private final int numClient;
+    // 
     private Socket socket;
     private String pseudo;
     private boolean connexionOK;
@@ -63,8 +67,8 @@ public class Client_info {
         this.pk = pk;
     }
 
-	public void setNumClient(UUID uuid2) {
-		this.uuid = uuid2;
-		
-	}
+    public void setNumClient(UUID uuid2) {
+            this.uuid = uuid2;
+
+    }
 }

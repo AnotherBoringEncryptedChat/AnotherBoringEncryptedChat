@@ -1,21 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package abec_app;
+package abec.app;
 
+import abec.encryption.EncryptionKeys;
 import java.io.*;
 import java.security.KeyPair;
 
 import javax.swing.*;
 
-
-
-/**
- *
- * @author Max
- */
 public class Client_manage{
 	
 	private KeyPair keys;
@@ -31,7 +21,20 @@ public class Client_manage{
             OutputStream out = client.getSocket().getOutputStream();
             DataOutputStream sortie = new DataOutputStream(out);
 
-//            if (!msg.isEmpty()) sortie.writeUTF(client.getPseudo() + msg);
+            if (!msg.isEmpty()) sortie.writeUTF(EncryptionKeys.encrypt(msg.getBytes(), client.getKeys().getPublic()).toString());
+            System.out.println("Send :   " + msg);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+    }
+    
+    public void sendUnencryptedMessage(Client_info client, String msg) {
+        System.out.println("---------------------- sendUnencryptedMessage()");
+        try {
+            // Recuperation of output stream
+            OutputStream out = client.getSocket().getOutputStream();
+            DataOutputStream sortie = new DataOutputStream(out);
+
             if (!msg.isEmpty()) sortie.writeUTF(msg);
             System.out.println("Send :   " + msg);
         } catch (Exception e) {
@@ -42,7 +45,7 @@ public class Client_manage{
     public String ReceiveMessage(Client_info client){
         String msg = null;
         System.out.println("---------------------- ReceiveMessage()");
-        //String msg_decode = null;
+
         try {
             DataInputStream entree = new DataInputStream(client.getSocket().getInputStream());
             msg = entree.readUTF();
@@ -88,10 +91,7 @@ public class Client_manage{
         JFileChooser jfc = new JFileChooser();
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnfile = jfc.showSaveDialog(null);
-        //File rep = jfl.getSelectedFile();
-        /*if (!rep.exists()) {
-         rep.mkdirs();
-         }*/
+
         if (returnfile != JFileChooser.APPROVE_OPTION){
             File file = new File(jfc.getSelectedFile().getPath() + "//" + fname);
             FileOutputStream fileOut = null;
@@ -113,19 +113,5 @@ public class Client_manage{
         }
     }
 
-	public void sendUnencryptedMessage(Client_info client, String msg) {
-        System.out.println("---------------------- sendMessage()");
-        try {
-            // Recuperation of output stream
-            OutputStream out = client.getSocket().getOutputStream();
-            DataOutputStream sortie = new DataOutputStream(out);
 
-//            if (!msg.isEmpty()) sortie.writeUTF(client.getPseudo() + msg);
-            if (!msg.isEmpty()) sortie.writeUTF(msg);
-            System.out.println("Send :   " + msg);
-        } catch (Exception e) {
-            e.printStackTrace(System.out);
-        }
-		
-	}
 }
