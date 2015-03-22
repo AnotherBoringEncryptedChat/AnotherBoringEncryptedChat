@@ -151,7 +151,7 @@ public class TransfertSock extends Thread {
     public void sendMyPublicKey(Serveur_manage server_manage){
         
         if(client.getConnexion()){
-            server_manage.sendMessageUnencrypted(server, client, new String(server.getKeys().getPublic().getEncoded()));
+            server_manage.sendMessageUnencrypted(server, client, EncryptionKeys.retrieveKey(server.getKeys().getPublic().getEncoded()));
         }
     }
 }

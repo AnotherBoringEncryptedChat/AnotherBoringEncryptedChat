@@ -6,6 +6,7 @@
  */
 package abec.app;
 
+import abec.encryption.EncryptionKeys;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,6 +50,11 @@ public class Tchat extends javax.swing.JFrame {
 		this.clientManager.sendUnencryptedMessage(this.client, client.getUUID().toString());
 		this.clientManager.sendUnencryptedMessage(this.client, client.getPseudo());
 		this.clientManager.sendUnencryptedMessage(this.client, retrieveKey(client.getKeys().getPublic().getEncoded()));
+                
+                String receivedKey = this.clientManager.ReceiveMessage(client);
+                byte[] receivedKeyByteArray = EncyptionKeys.hexStringToByteArray(receivedKey);
+                this.clientManager.setServerPublicKey(EncryptionKeys.getPublicKeyFromByteArray(receivedKeyByteArray));
+                
 		this.clientManager.sendMessage(this.client, newConnection);
 
 		initComponents();

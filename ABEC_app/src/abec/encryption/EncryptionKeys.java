@@ -33,4 +33,19 @@ public class EncryptionKeys {
     {
         return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(array));
     }
+    
+    public static String retrieveKey(byte[] b) {	
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < b.length; i++) {
+                    String s = Integer.toHexString(b[i]);
+                    if (s.length() < 2) {
+                            sb.append("0" + Integer.toHexString((0xFF) & b[i]));
+                    }
+                    else {
+                            sb.append(Integer.toHexString((0xFF) & b[i]));
+                    }
+            }
+            return sb.toString();
+    }
 }

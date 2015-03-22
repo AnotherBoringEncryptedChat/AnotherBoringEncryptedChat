@@ -2,15 +2,23 @@ package abec.app;
 
 import abec.encryption.EncryptionKeys;
 import java.io.*;
-import java.security.KeyPair;
+import java.security.PublicKey;
 
 import javax.swing.*;
 
 public class Client_manage{
 	
-	private KeyPair keys;
+	private PublicKey serverPublicKey;
 	
     public Client_manage(){}
+
+    public PublicKey getServerPublicKey() {
+        return serverPublicKey;
+    }
+
+    public void setServerPublicKey(PublicKey serverPublicKey) {
+        this.serverPublicKey = serverPublicKey;
+    }
     
     ////////////////////////////////////////////////////////////////////////////////
     // Envoi de message sur la socket 
@@ -21,7 +29,7 @@ public class Client_manage{
             OutputStream out = client.getSocket().getOutputStream();
             DataOutputStream sortie = new DataOutputStream(out);
 
-            if (!msg.isEmpty()) sortie.writeUTF(EncryptionKeys.encrypt(msg.getBytes(), client.getKeys().getPublic()).toString());
+            if (!msg.isEmpty()) sortie.writeUTF(EncryptionKeys.encrypt(msg.getBytes(), serverPublicKey).toString());
             System.out.println("Send :   " + msg);
         } catch (Exception e) {
             e.printStackTrace(System.out);
