@@ -8,22 +8,22 @@ package abec.app;
 
 import abec.encryption.EncryptionKeys;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.PublicKey;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.TreeMap;
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import abec.encryption.EncryptionKeys;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * Main Chat Window
@@ -36,7 +36,7 @@ public class Tchat extends javax.swing.JFrame {
 	private javax.swing.JTextArea _TA_Main = new JTextArea();
 	ArrayList<JTextArea> TA_List = new ArrayList<>();
 
-	public Tchat(Client_info client) throws IOException {
+	public Tchat(Client_info client) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		System.out.println("-------Public Tchat()");
 		this.client = client;
 		this.clientManager = new Client_manage();
@@ -49,10 +49,10 @@ public class Tchat extends javax.swing.JFrame {
 
 		this.clientManager.sendUnencryptedMessage(this.client, client.getUUID().toString());
 		this.clientManager.sendUnencryptedMessage(this.client, client.getPseudo());
-		this.clientManager.sendUnencryptedMessage(this.client, retrieveKey(client.getKeys().getPublic().getEncoded()));
+		this.clientManager.sendUnencryptedMessage(this.client, EncryptionKeys.retrieveKey(client.getKeys().getPublic().getEncoded()));
                 
                 String receivedKey = this.clientManager.ReceiveMessage(client);
-                byte[] receivedKeyByteArray = EncyptionKeys.hexStringToByteArray(receivedKey);
+                byte[] receivedKeyByteArray = EncryptionKeys.hexStringToByteArray(receivedKey);
                 this.clientManager.setServerPublicKey(EncryptionKeys.getPublicKeyFromByteArray(receivedKeyByteArray));
                 
 		this.clientManager.sendMessage(this.client, newConnection);
@@ -72,21 +72,6 @@ public class Tchat extends javax.swing.JFrame {
 		Client_Com ThClient = new Client_Com(this.client, this);
 		ThClient.start();
 
-	}
-
-	private String retrieveKey(byte[] b) {	
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < b.length; i++) {
-			String s = Integer.toHexString(b[i]);
-			if (s.length() < 2) {
-				sb.append("0" + Integer.toHexString((0xFF) & b[i]));
-			}
-			else {
-				sb.append(Integer.toHexString((0xFF) & b[i]));
-			}
-		}
-		return sb.toString();
 	}
 
 	public boolean getEtatConnexion() {

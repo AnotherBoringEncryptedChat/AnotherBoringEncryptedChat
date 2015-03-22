@@ -6,6 +6,10 @@
 package abec.app;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -116,10 +120,18 @@ public class Home extends javax.swing.JFrame {
           Client_info client = new Client_info();
           if (!jTextField1.getText().equals("")){
               client.setPseudo(jTextField1.getText());
-              Tchat tchat = new Tchat(client);
-              tchat.setTitle("ABEC Project");
-              tchat.setVisible(true);
-              this.dispose();
+              Tchat tchat;
+              try {
+                    tchat = new Tchat(client);
+                    tchat.setTitle("ABEC Project");
+                    tchat.setVisible(true);
+                    this.dispose();
+              } catch (NoSuchAlgorithmException ex) {
+                  ex.printStackTrace();
+              } catch (InvalidKeySpecException ex) {
+                  ex.printStackTrace();
+              }
+              
           }
           else{JOptionPane.showMessageDialog(null, "Please, chose a correct login", "Wrong login", JOptionPane.INFORMATION_MESSAGE);}
  //       char[] password = jPasswordField1.getPassword();

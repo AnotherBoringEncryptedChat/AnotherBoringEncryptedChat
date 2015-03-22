@@ -119,19 +119,11 @@ public class TransfertSock extends Thread {
                 in = client.getSocket().getInputStream();
                 entree = new DataInputStream(in);
                 String messageAsString = entree.readUTF();
-//                byte[] readMsg = messageAsString.getBytes();
-//                System.out.println("client public key -> "+ messageAsString );
-//                String s = new String(readMsg);
-//                FileOutputStream fos = new FileOutputStream(new File("/home/zangakyu/Bureau/test2.txt"));
-//                fos.write(readMsg);	
-                byte[] readMsg = hexStringToByteArray(messageAsString);
-                FileOutputStream fos = new FileOutputStream(new File("/home/jordan/Desktop/test2.txt"));
-                fos.write(readMsg);	
                 
-                
-                
+                byte[] readMsg = EncryptionKeys.hexStringToByteArray(messageAsString);                        
                 
                 client.setPk(EncryptionKeys.getPublicKeyFromByteArray(readMsg));
+                
             }catch(NoSuchAlgorithmException | InvalidKeySpecException | IOException e)
             {
                 client.setConnexion(false);
@@ -139,18 +131,11 @@ public class TransfertSock extends Thread {
             }
         }
     } 
-    public static byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                                 + Character.digit(s.charAt(i+1), 16));
-        }
-        return data;
-    }
+  
     public void sendMyPublicKey(Serveur_manage server_manage){
         
         if(client.getConnexion()){
+        	System.out.println("----sendServerKey------");
             server_manage.sendMessageUnencrypted(server, client, EncryptionKeys.retrieveKey(server.getKeys().getPublic().getEncoded()));
         }
     }
