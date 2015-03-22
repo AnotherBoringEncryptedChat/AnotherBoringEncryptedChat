@@ -5,6 +5,8 @@
  */
 package abec.app;
 
+import java.io.IOException;
+
 import javax.swing.JOptionPane;
 
 
@@ -50,7 +52,12 @@ public class Home extends javax.swing.JFrame {
         jButton1.setText("Connexion");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                try {
+					jButton1ActionPerformed(evt);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -104,7 +111,7 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws IOException {//GEN-FIRST:event_jButton1ActionPerformed
           System.out.println("------------- JButtonAction()");
           Client_info client = new Client_info();
           if (!jTextField1.getText().equals("")){
