@@ -5,6 +5,7 @@
  */
 package abec.servapp;
 
+import abec.encryption.ClefDuJour;
 import abec.encryption.EncryptionKeys;
 import java.io.*;
 import java.net.Socket;
@@ -16,8 +17,18 @@ import java.util.UUID;
  */
 public class Serveur_manage {
     
-    
-        public Serveur_manage(){}
+        private String clefDuJour;
+
+    public String getClefDuJour() {
+        return clefDuJour;
+    }
+        public Serveur_manage(){
+            
+            ClefDuJour cj = new ClefDuJour();
+            cj.generateKeys();
+            
+            clefDuJour = cj.getKeyOfTheDay();
+        }
         
         public void sendMessage(Serveur_info server, Client_info client, String msg) {
             System.out.println("---------------------- sendMessage();");
@@ -32,9 +43,7 @@ public class Serveur_manage {
                     sortie = new DataOutputStream(out);
                     if (server.getHashMap().size() <= 1 && !msg.isEmpty()) msg = "--popup:Nobody";
                     try{
-                        byte[] msg_bytes = EncryptionKeys.encrypt(msg.getBytes(), client.getPk());
-                        msg = new String(msg_bytes);
-                        sortie.writeUTF(msg);
+                        sortie.writeUTF(EncryptionKeys.encryptString(msg, this.clefDuJour));
                     }
                     catch(Exception e){
                         e.printStackTrace();

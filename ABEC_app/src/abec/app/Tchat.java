@@ -14,7 +14,6 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import abec.encryption.EncryptionKeys;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -49,15 +48,7 @@ public class Tchat extends javax.swing.JFrame {
 
 		this.clientManager.sendUnencryptedMessage(this.client, client.getUUID().toString());
 		this.clientManager.sendUnencryptedMessage(this.client, client.getPseudo());
-		this.clientManager.sendUnencryptedMessage(this.client, EncryptionKeys.retrieveKey(client.getKeys().getPublic().getEncoded()));
-                
-                //Réception de la clef RSA publique du serveur
-                String receivedKey = this.clientManager.ReceiveMessage(client);
-                byte[] receivedKeyByteArray = EncryptionKeys.hexStringToByteArray(receivedKey);
-                this.clientManager.setServerPublicKey(EncryptionKeys.getPublicKeyFromByteArray(receivedKeyByteArray));
-                
-		//this.clientManager.sendMessage(this.client, newConnection);
-                this.clientManager.sendMessage(this.client, "a");
+//		
 		initComponents();
 		_TA_Main.setPreferredSize(new Dimension(360, 500));
 		_TA_Main.setSize(new Dimension(99, 100));

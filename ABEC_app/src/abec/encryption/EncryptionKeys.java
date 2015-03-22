@@ -109,4 +109,38 @@ public class EncryptionKeys {
         c.init(Cipher.DECRYPT_MODE, key);
         return c.doFinal(data);
     }
+    
+    public static String encryptString(String sToEncrypt, String key){
+        String toReturn = "";
+        int cpt = 0;
+        for(char c : sToEncrypt.toCharArray()){
+            char encodingChar = key.charAt(cpt);
+
+            int diff = Character.valueOf(encodingChar).compareTo(Character.valueOf('A'));
+            int element = ((int)c +diff - (byte)'A')%26;
+            byte newByte = (byte)( element + (byte)'A' );
+            toReturn += (char) newByte;
+            cpt = (cpt+1)%key.length();
+        }
+        
+        return toReturn;
+    }
+    
+    public static String decryptString(String sToDecrypt, String key){
+        
+        String toReturn = "";
+        int cpt = 0;
+        
+        for(char c : sToDecrypt.toCharArray()){
+            char encodingChar = key.charAt(cpt);
+            
+            int diff = Character.valueOf(encodingChar).compareTo(Character.valueOf('A'));
+            int element = (26 + ((int)c -diff - (byte)'A') )%26;
+            byte newByte = (byte)( element + (byte)'A' );
+            toReturn += (char)newByte;
+            cpt = (cpt+1)%key.length();
+        }
+        
+        return toReturn;
+    }
 }

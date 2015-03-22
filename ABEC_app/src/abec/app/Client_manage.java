@@ -1,5 +1,6 @@
 package abec.app;
 
+import abec.encryption.ClefDuJour;
 import abec.encryption.EncryptionKeys;
 import java.io.*;
 import java.security.InvalidKeyException;
@@ -18,8 +19,14 @@ import javax.swing.*;
 public class Client_manage{
 	
 	private PublicKey serverPublicKey;
+        private String clefDuJour;
 	
-    public Client_manage(){}
+    public Client_manage(){
+        ClefDuJour clefsDuJour = new ClefDuJour();
+        clefsDuJour.generateKeys();
+        
+        clefDuJour = clefsDuJour.getKeyOfTheDay();
+    }
 
     public PublicKey getServerPublicKey() {
         return serverPublicKey;
@@ -38,12 +45,9 @@ public class Client_manage{
             OutputStream out = client.getSocket().getOutputStream();
             DataOutputStream sortie = new DataOutputStream(out);
             
-            SecretKey sk = EncryptionKeys.KeyGenerator();
-            byte[] AESKeyAsBytes = sk.getEncoded();
-            sortie.writeUTF(new String(EncryptionKeys.encrypt(AESKeyAsBytes, serverPublicKey)));
+            String encryptedMsg = EncryptionKeys.encryptString(msg, this.clefDuJour);
+            sortie.writeUTF(encryptedMsg);
             
-            byte[] encryptedMsg = EncryptionKeys.encryptAES(msg.getBytes(), sk);
-            sortie.writeUTF(new String(encryptedMsg));
             
             System.out.println("Send :   " + msg);
         } catch (Exception e) {

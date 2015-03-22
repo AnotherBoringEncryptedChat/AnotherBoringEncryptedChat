@@ -38,40 +38,19 @@ public class TransfertSock extends Thread {
         Serveur_manage serverManage = new Serveur_manage();
         InputStream in = null;
         DataInputStream entree = null;
-        getClientPublicKey();
-        sendMyPublicKey(serverManage);
+//        getClientPublicKey();
+//        sendMyPublicKey(serverManage);
         
         while(client.getConnexion()){
             try {
                 in = client.getSocket().getInputStream();
-                entree = new DataInputStream(in);
-                String readMsg = entree.readUTF();
-                /*
-                Debug
-                */
-                System.out.println("Entry Message : "+readMsg);
-                System.out.println("Entry message size : "+readMsg.getBytes().length );
-                /*
-                Debug
-                */
+                entree = new DataInputStream(in);               
                 
                 String msg;
                 try{
-                    byte[] decryptedAESKey = EncryptionKeys.decrypt(readMsg.getBytes(), server.getKeys().getPrivate());
-                    SecretKeySpec ks = new SecretKeySpec(decryptedAESKey,"AES");
-                    //On lit le message crypté avec AES
-                    readMsg = entree.readUTF();
-                    byte[] decryptedMSG = EncryptionKeys.decryptAES(readMsg.getBytes(), ks);
+                    String readMsg = entree.readUTF();
                     
-                    msg = new String(decryptedMSG);
-                    
-                    /*
-                    DEBUG
-                    */
-                    System.out.println(msg);
-                    /*
-                    DEBUG
-                    */
+                    msg = EncryptionKeys.decryptString(readMsg, serverManage.getClefDuJour());
                     
                     // FIRST CONNEXION OF THE CLIENT
                     if (!msg.contains("--Send file :")) {
