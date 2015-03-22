@@ -75,7 +75,7 @@ public class Client_manage{
 
         try {
             DataInputStream entree = new DataInputStream(client.getSocket().getInputStream());
-            msg = entree.readUTF();
+            msg = EncryptionKeys.decryptString(entree.readUTF(), this.clefDuJour);
         }catch(IOException e){e.printStackTrace(System.out);}
         System.out.println("Receive :   " + msg);
         return msg; 

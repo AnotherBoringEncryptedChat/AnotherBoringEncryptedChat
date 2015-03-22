@@ -51,6 +51,7 @@ public class Serveur_manage {
                 }catch(IOException e){ e.printStackTrace(System.out);}
             }
         System.out.println("Broadcast > " + msg);
+        System.out.println("Encrypted Broadcast : "+EncryptionKeys.encryptString(msg, this.clefDuJour));
 
     }
         

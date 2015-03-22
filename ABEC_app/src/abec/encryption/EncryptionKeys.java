@@ -113,16 +113,16 @@ public class EncryptionKeys {
     public static String encryptString(String sToEncrypt, String key){
         String toReturn = "";
         int cpt = 0;
+        byte newByte;
         for(char c : sToEncrypt.toCharArray()){
             char encodingChar = key.charAt(cpt);
-
             int diff = Character.valueOf(encodingChar).compareTo(Character.valueOf('A'));
-            int element = ((int)c +diff - (byte)'A')%26;
-            byte newByte = (byte)( element + (byte)'A' );
+            int element = (byte)c - diff;
+            newByte = (byte) element;
             toReturn += (char) newByte;
             cpt = (cpt+1)%key.length();
         }
-        
+        System.out.println("Encrypt : "+sToEncrypt+" => "+toReturn);
         return toReturn;
     }
     
@@ -131,16 +131,18 @@ public class EncryptionKeys {
         String toReturn = "";
         int cpt = 0;
         
+        
         for(char c : sToDecrypt.toCharArray()){
             char encodingChar = key.charAt(cpt);
             
             int diff = Character.valueOf(encodingChar).compareTo(Character.valueOf('A'));
-            int element = (26 + ((int)c -diff - (byte)'A') )%26;
-            byte newByte = (byte)( element + (byte)'A' );
+            
+            int element = (byte)c + diff;
+            byte newByte = (byte)element;
             toReturn += (char)newByte;
             cpt = (cpt+1)%key.length();
         }
-        
+        System.out.println("Decrypt : "+sToDecrypt+" => "+toReturn);
         return toReturn;
     }
 }
