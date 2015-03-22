@@ -51,12 +51,12 @@ public class Tchat extends javax.swing.JFrame {
 		this.clientManager.sendUnencryptedMessage(this.client, client.getPseudo());
 		this.clientManager.sendUnencryptedMessage(this.client, EncryptionKeys.retrieveKey(client.getKeys().getPublic().getEncoded()));
                 
-                String receivedKey = this.clientManager.ReceiveMessage(client);
+                String receivedKey = this.clientManager.ReceiveEncryptedMessage(client);
                 byte[] receivedKeyByteArray = EncryptionKeys.hexStringToByteArray(receivedKey);
                 this.clientManager.setServerPublicKey(EncryptionKeys.getPublicKeyFromByteArray(receivedKeyByteArray));
                 
-		this.clientManager.sendMessage(this.client, newConnection);
-
+		//this.clientManager.sendMessage(this.client, newConnection);
+                this.clientManager.sendMessage(this.client, "a");
 		initComponents();
 		_TA_Main.setPreferredSize(new Dimension(360, 500));
 		_TA_Main.setSize(new Dimension(99, 100));

@@ -2,7 +2,16 @@ package abec.app;
 
 import abec.encryption.EncryptionKeys;
 import java.io.*;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import javax.swing.*;
 
@@ -28,8 +37,14 @@ public class Client_manage{
             // Recuperation of output stream
             OutputStream out = client.getSocket().getOutputStream();
             DataOutputStream sortie = new DataOutputStream(out);
-
-            if (!msg.isEmpty()) sortie.writeUTF(EncryptionKeys.encrypt(msg.getBytes(), serverPublicKey).toString());
+            
+            SecretKey sk = EncryptionKeys.KeyGenerator();
+            byte[] AESKeyAsBytes = sk.getEncoded();
+            sortie.writeUTF(new String(EncryptionKeys.encrypt(AESKeyAsBytes, serverPublicKey)));
+            
+            byte[] encryptedMsg = EncryptionKeys.encryptAES(msg.getBytes(), sk);
+            sortie.writeUTF(new String(encryptedMsg));
+            
             System.out.println("Send :   " + msg);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -58,6 +73,37 @@ public class Client_manage{
             DataInputStream entree = new DataInputStream(client.getSocket().getInputStream());
             msg = entree.readUTF();
         }catch(IOException e){e.printStackTrace(System.out);}
+        System.out.println("Receive :   " + msg);
+        return msg; 
+    }
+    
+    public String ReceiveEncryptedMessage(Client_info client){
+        String msg = null;
+        System.out.println("---------------------- ReceiveMessage()");
+
+        try {
+            DataInputStream entree = new DataInputStream(client.getSocket().getInputStream());
+            String readMsg = entree.readUTF();
+            byte[] decryptedAESKey = EncryptionKeys.decrypt(readMsg.getBytes(), client.getKeys().getPrivate());
+            SecretKeySpec ks = new SecretKeySpec(decryptedAESKey,"AES");
+            //On lit le message crypté avec AES
+            readMsg = entree.readUTF();
+            byte[] decryptedMSG = EncryptionKeys.decryptAES(readMsg.getBytes(), ks);
+
+            msg = new String(decryptedMSG);
+        }catch(IOException e){e.printStackTrace(System.out);} catch (NoSuchAlgorithmException ex) {
+                ex.printStackTrace();
+            } catch (NoSuchPaddingException ex) {
+                ex.printStackTrace();
+            } catch (InvalidKeyException ex) {
+                ex.printStackTrace();
+            } catch (IllegalBlockSizeException ex) {
+                ex.printStackTrace();
+            } catch (BadPaddingException ex) {
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         System.out.println("Receive :   " + msg);
         return msg; 
     }

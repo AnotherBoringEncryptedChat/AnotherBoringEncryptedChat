@@ -56,7 +56,7 @@ public class Serveur_manage {
                 try{
                     out = socket_transfert.getOutputStream();
                     sortie = new DataOutputStream(out);
-                    if (server.getHashMap().size() <= 1 && !msg.isEmpty()) msg = "--popup:Nobody";
+//                    if (server.getHashMap().size() <= 1 && !msg.isEmpty()) msg = "--popup:Nobody";
                     try{
                         sortie.writeUTF(msg);
                     }

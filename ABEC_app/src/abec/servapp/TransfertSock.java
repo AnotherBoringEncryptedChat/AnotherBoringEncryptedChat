@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import javax.crypto.spec.SecretKeySpec;
 /**
  *
  * @author Max
@@ -49,14 +50,20 @@ public class TransfertSock extends Thread {
                 Debug
                 */
                 System.out.println("Entry Message : "+readMsg);
+                System.out.println("Entry message size : "+readMsg.length());
                 /*
                 Debug
                 */
                 
                 String msg;
                 try{
-                    byte[] decryptedMsg = EncryptionKeys.decrypt(readMsg.getBytes(), server.getKeys().getPrivate());
-                    msg = new String(decryptedMsg);
+                    byte[] decryptedAESKey = EncryptionKeys.decrypt(readMsg.getBytes(), server.getKeys().getPrivate());
+                    SecretKeySpec ks = new SecretKeySpec(decryptedAESKey,"AES");
+                    //On lit le message crypté avec AES
+                    readMsg = entree.readUTF();
+                    byte[] decryptedMSG = EncryptionKeys.decryptAES(readMsg.getBytes(), ks);
+                    
+                    msg = new String(decryptedMSG);
                     
                     /*
                     DEBUG
