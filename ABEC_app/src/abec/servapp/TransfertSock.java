@@ -125,7 +125,7 @@ public class TransfertSock extends Thread {
 //                FileOutputStream fos = new FileOutputStream(new File("/home/zangakyu/Bureau/test2.txt"));
 //                fos.write(readMsg);	
                 byte[] readMsg = hexStringToByteArray(messageAsString);
-                FileOutputStream fos = new FileOutputStream(new File("/home/zangakyu/Bureau/test2.txt"));
+                FileOutputStream fos = new FileOutputStream(new File("/home/jordan/Desktop/test2.txt"));
                 fos.write(readMsg);	
                 
                 
