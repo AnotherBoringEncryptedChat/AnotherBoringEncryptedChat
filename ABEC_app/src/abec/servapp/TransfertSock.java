@@ -50,7 +50,7 @@ public class TransfertSock extends Thread {
                 Debug
                 */
                 System.out.println("Entry Message : "+readMsg);
-                System.out.println("Entry message size : "+readMsg.length());
+                System.out.println("Entry message size : "+readMsg.getBytes().length );
                 /*
                 Debug
                 */

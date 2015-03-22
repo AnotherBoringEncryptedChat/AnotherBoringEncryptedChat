@@ -66,7 +66,7 @@ public class EncryptionKeys {
     
     public static SecretKey KeyGenerator() throws NoSuchAlgorithmException{
         KeyGenerator kg = KeyGenerator.getInstance("AES");
-        kg.init(256);
+        kg.init(128);
         return kg.generateKey();
     }
     
@@ -75,7 +75,7 @@ public class EncryptionKeys {
             IllegalBlockSizeException, 
             BadPaddingException, 
             NoSuchPaddingException{
-        Cipher c = Cipher.getInstance("AES");
+        Cipher c = Cipher.getInstance("AES/ECB/PKCS5Padding");
         c.init(Cipher.ENCRYPT_MODE, key);
         return c.doFinal(data);
     }
@@ -85,7 +85,7 @@ public class EncryptionKeys {
             InvalidKeyException, 
             IllegalBlockSizeException, 
             BadPaddingException{
-        Cipher c = Cipher.getInstance("AES");
+        Cipher c = Cipher.getInstance("AES/ECB/PKCS5Padding");
         c.init(Cipher.DECRYPT_MODE, key);
         return c.doFinal(data);
     }
@@ -95,7 +95,7 @@ public class EncryptionKeys {
             IllegalBlockSizeException, 
             BadPaddingException, 
             NoSuchPaddingException{
-        Cipher c = Cipher.getInstance("AES");
+        Cipher c = Cipher.getInstance("AES/ECB/PKCS5Padding");
         c.init(Cipher.ENCRYPT_MODE, key);
         return c.doFinal(data);
     }
@@ -105,7 +105,7 @@ public class EncryptionKeys {
             InvalidKeyException, 
             IllegalBlockSizeException, 
             BadPaddingException{
-        Cipher c = Cipher.getInstance("AES");
+        Cipher c = Cipher.getInstance("AES/ECB/PKCS5Padding");
         c.init(Cipher.DECRYPT_MODE, key);
         return c.doFinal(data);
     }

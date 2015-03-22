@@ -51,7 +51,8 @@ public class Tchat extends javax.swing.JFrame {
 		this.clientManager.sendUnencryptedMessage(this.client, client.getPseudo());
 		this.clientManager.sendUnencryptedMessage(this.client, EncryptionKeys.retrieveKey(client.getKeys().getPublic().getEncoded()));
                 
-                String receivedKey = this.clientManager.ReceiveEncryptedMessage(client);
+                //Réception de la clef RSA publique du serveur
+                String receivedKey = this.clientManager.ReceiveMessage(client);
                 byte[] receivedKeyByteArray = EncryptionKeys.hexStringToByteArray(receivedKey);
                 this.clientManager.setServerPublicKey(EncryptionKeys.getPublicKeyFromByteArray(receivedKeyByteArray));
                 

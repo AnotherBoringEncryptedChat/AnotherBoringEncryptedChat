@@ -79,7 +79,7 @@ public class Client_manage{
     
     public String ReceiveEncryptedMessage(Client_info client){
         String msg = null;
-        System.out.println("---------------------- ReceiveMessage()");
+        System.out.println("---------------------- ReceiveEncryptedMessage()");
 
         try {
             DataInputStream entree = new DataInputStream(client.getSocket().getInputStream());
