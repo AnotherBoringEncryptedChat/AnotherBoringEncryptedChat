@@ -49,6 +49,17 @@
 				color: black;
 				padding: 20px;
 			}
+
+			#date{
+			  font-family: sans-serif;
+			  position: fixed;
+			  bottom: 54px;
+			  left: 100px;
+			  z-index: 31;
+			  font-size: 0.9em;
+			  color: white;
+			  opacity: 0.7;
+			}
 		</style>
 
 		<!--[if lt IE 9]>
@@ -79,6 +90,8 @@
 								<li class="fragment">Encryption part</li>
 							</ol>
 						</li>
+						<li>
+						<li class="fragment">Encountered difficulties</li>
 					</ol>
 				</section>
 
@@ -109,6 +122,17 @@
 						</ul>
 					</section>
 				</section>
+
+
+				<section>
+					<h2>How were we organized ?</h2>
+					<ul>
+						<li class="fragment">Netbeans IDE/Eclipse</li>
+						<li class='fragment'>Git Versionning tool</li>
+						<li class="fragment">GitHub centralized code hosting (<a href="https://github.com/AnotherBoringEncryptedChat/AnotherBoringEncryptedChat" target="_blank">ABEC</a>)</li>
+						<li class="fragment">Centralized wordpress blog (<a href="http://abec-blog.olympe.in/" target="_blank">abec-blog</a>)</li>
+					</ul>
+				</section> 
 
 				<section>
 					<section data-background="#133F53">
@@ -146,6 +170,24 @@
 				</section>
 
 				<section>
+					<section>
+						<h2>Others way to do it </h2>
+						<figure>
+							<img src="media/images/peer2peer.png" alt="Image of peer 2 peer connexion">
+							<figcaption>Schema of the peer to peer connexion</figcaption> 
+						</figure> 
+					</section>
+					<section>
+						<h2>Why we didn't chose this way ?</h2> 
+						<ul>
+							<li class="fragment">Security</li>
+							<li class="fragment">Users management</li>
+							<li class="fragment">Heavy application</li>
+						</ul> 
+					</section>
+				</section> 	
+
+				<section>
 					<section data-background="#133F53">
 						<h2>Application presentation</h2>
 						<h2>Encryption part</h2>
@@ -157,12 +199,46 @@
 							<figcaption>Schema explaining the Keypair encryption</figcaption>
 						</figure>
 					</section>
+
+					<section>
+						<figure>
+							<img src="media/images/encryption_2.png" alt="">
+							<figcaption>Schema explaining the asynchrone/synchrone encryption</figcaption>
+						</figure>
+					</section>
 				</section>
 
+				<section>
+					<h2>Encountered Difficulties</h2>
+					<ul>
+						<li class="fragment">Encryption process
+							<ul>
+								<li class="fragment">Mathematical implication</li> 
+								<li class="fragment">Strength of different keys</li>
+								<li class="fragment">Discovering different methods</li> 
+							</ul> 	
+						</li> 
+						<li class="fragment">Discovering Java APIs</li> 
+					</ul> 
+				</section>
 
+				<section>
+					<h2>What did we learn ? </h2>
+					<ul>
+						<li class="fragment">Encryption is not for everybody</li>
+						<li class="fragment">Different communication ways between applications</li> 
+						<li class="fragment">Master collaboration tools</li>	
+					</ul>
+				</section>
+
+				
 			</div>
-
+			
+			
 		</div>
+<div id="date"></div>
+
+		
 	<!-- script -->
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.min.js"></script>
@@ -194,6 +270,23 @@
 					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
 					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
 				]
+			});
+
+
+			document.addEventListener('DOMContentLoaded', function() {
+				var element = document.getElementById('date');
+			
+				var date = new Date();
+
+				var day = date.getDate();
+				    day = day<10?'0'+day:day;
+
+				var month = (date.getMonth()+1);
+				    month = month<10?'0'+month:month;
+
+				var year = date.getFullYear();
+
+				element.innerHTML = day + "/" + month + "/" + year;
 			});
 		</script>
 	<!-- /script -->
