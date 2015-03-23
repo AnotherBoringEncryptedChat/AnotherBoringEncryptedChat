@@ -10,7 +10,7 @@ public class EncryptionPrototype {
     
     public static KeyPair keyPairGenerator () throws NoSuchAlgorithmException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-        kpg.initialize(2048);
+        kpg.initialize(128);
         KeyPair kp = kpg.generateKeyPair();
         return kp;
     }

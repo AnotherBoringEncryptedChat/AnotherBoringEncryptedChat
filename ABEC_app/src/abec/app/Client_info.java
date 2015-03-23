@@ -1,15 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package abec_app;
+package abec.app;
 
 
+import abec.encryption.EncryptionKeys;
 import java.net.InetAddress;
 import java.net.Socket;
 import javax.swing.JOptionPane;
+import java.security.KeyPair;
 import java.util.UUID;
+
 /**
  *
  * @author Max
@@ -19,15 +17,26 @@ public class Client_info {
     private String pseudo;
     private UUID UID;
     public boolean isConnected;
+    private KeyPair keys;
+    
     //private Tchat tchat = null;
 
-////////////////////////////////////////////////////////////////////////////////
+public KeyPair getKeys() {
+		return keys;
+	}
+
+	public void setKeys(KeyPair keys) {
+		this.keys = keys;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
     public Client_info() {
         try {
             socket = new Socket("localhost", 30000);
             pseudo = null;
             isConnected = true;
             UID = UUID.randomUUID();
+            keys = EncryptionKeys.keyPairGenerator();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Connexion at the server impossible", "Injoignable Serveur ", JOptionPane.ERROR_MESSAGE);
             isConnected = false;
@@ -35,6 +44,9 @@ public class Client_info {
     }
 ////////////////////////////////////////////////////////////////////////////////
 
+    public UUID getUUID(){
+        return UID;
+}
     public void setPseudo(String p) {
         pseudo = p;
     }

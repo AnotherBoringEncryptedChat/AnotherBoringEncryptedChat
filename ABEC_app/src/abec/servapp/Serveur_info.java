@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package abec_servapp;
+package abec.servapp;
+import abec.encryption.EncryptionKeys;
 import java.io.IOException;
 import java.net.*;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -18,7 +20,7 @@ public class Serveur_info {
     
     //private int nbClient;
     private ServerSocket listenerSocket;
-    private ConcurrentHashMap<Integer, Client_info> tabClients;
+    private ConcurrentHashMap<UUID, Client_info> tabClients;
     private boolean connexionOK;
     private KeyPair keys;
     
@@ -48,7 +50,7 @@ public class Serveur_info {
         }
     }
     
-    public ConcurrentHashMap<Integer,Client_info> getHashMap(){
+    public ConcurrentHashMap<UUID,Client_info> getHashMap(){
         return this.tabClients;
     }
     

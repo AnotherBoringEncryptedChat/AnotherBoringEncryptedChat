@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package abec_servapp;
+package abec.servapp;
 
+import abec.encryption.ClefDuJour;
+import abec.encryption.EncryptionKeys;
 import java.io.*;
 import java.net.Socket;
+import java.util.UUID;
 
 /**
  *
@@ -14,25 +17,33 @@ import java.net.Socket;
  */
 public class Serveur_manage {
     
-    
-        public Serveur_manage(){}
+        private String clefDuJour;
+
+    public String getClefDuJour() {
+        return clefDuJour;
+    }
+        public Serveur_manage(){
+            
+            ClefDuJour cj = new ClefDuJour();
+            cj.generateKeys();
+            
+            clefDuJour = cj.getKeyOfTheDay();
+        }
         
         public void sendMessage(Serveur_info server, Client_info client, String msg) {
             System.out.println("---------------------- sendMessage();");
             OutputStream out = null;
             DataOutputStream sortie = null;
-            for (Integer i : server.getHashMap().keySet()) {
+            for (UUID i : server.getHashMap().keySet()) {
                 Socket socket_transfert = server.getHashMap().get(i).getSocket();
-                // RÃ©cupÃ©ration du flot de sortie
-                // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                // Récupécration du flot de sortie
+                // Création du flot d'entrée pour données typées 
                 try{
                     out = socket_transfert.getOutputStream();
                     sortie = new DataOutputStream(out);
                     if (server.getHashMap().size() <= 1 && !msg.isEmpty()) msg = "--popup:Nobody";
                     try{
-                        byte[] msg_bytes = EncryptionKeys.encrypt(msg.getBytes(), client.getPk());
-                        msg = new String(msg_bytes);
-                        sortie.writeUTF(msg);
+                        sortie.writeUTF(EncryptionKeys.encryptString(msg, this.clefDuJour));
                     }
                     catch(Exception e){
                         e.printStackTrace();
@@ -40,21 +51,22 @@ public class Serveur_manage {
                 }catch(IOException e){ e.printStackTrace(System.out);}
             }
         System.out.println("Broadcast > " + msg);
+        System.out.println("Encrypted Broadcast : "+EncryptionKeys.encryptString(msg, this.clefDuJour));
 
     }
         
         public void sendMessageUnencrypted(Serveur_info server, Client_info client, String msg) {
-            System.out.println("---------------------- sendMessage();");
+            System.out.println("---------------------- sendMessageUnencrypted();");
             OutputStream out = null;
             DataOutputStream sortie = null;
-            for (Integer i : server.getHashMap().keySet()) {
+            for (UUID i : server.getHashMap().keySet()) {
                 Socket socket_transfert = server.getHashMap().get(i).getSocket();
-                // RÃ©cupÃ©ration du flot de sortie
-                // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                // Récupération  du flot de sortie
+                // CrÃ©ation du flot d'entrée pour données typées 
                 try{
                     out = socket_transfert.getOutputStream();
                     sortie = new DataOutputStream(out);
-                    if (server.getHashMap().size() <= 1 && !msg.isEmpty()) msg = "--popup:Nobody";
+//                    if (server.getHashMap().size() <= 1 && !msg.isEmpty()) msg = "--popup:Nobody";
                     try{
                         sortie.writeUTF(msg);
                     }
@@ -69,7 +81,7 @@ public class Serveur_manage {
 
     public void sendFile(Serveur_info server,Client_info client,byte b[] ) {
         System.out.println("---------------------- sendFile()");
-        for (Integer i : server.getHashMap().keySet()) {
+        for (UUID i : server.getHashMap().keySet()) {
             if (i != client.getNumClient()){
                 OutputStream out = null;
                 Socket socket_transfert = server.getHashMap().get(i).getSocket();
@@ -80,7 +92,7 @@ public class Serveur_manage {
                     System.out.println("Problème Broadcasting de message (Byte-Type");
                     e.printStackTrace(System.out);
                 }
-                // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                // Création du flot d'entrée pour données typées 
                 DataOutputStream sortie = new DataOutputStream(out);
                 try{
                     sortie.write(b);
@@ -95,12 +107,12 @@ public class Serveur_manage {
         System.out.println("---------------------- sendFileInfo()");
         System.out.println("Broadcast file > " + nom + " to :");
         try {
-            for (Integer i : server.getHashMap().keySet()) {
+            for (UUID i : server.getHashMap().keySet()) {
                 if (i != client.getNumClient()) {
                     System.out.println("\t " + client.getPseudo());
-                    // RÃ©cupÃ©ration du flot de sortie
+                    // Récupération du flot de sortie
                     OutputStream out = server.getHashMap().get(i).getSocket().getOutputStream();
-                    // CrÃ©ation du flot d'entrÃ©e pour donnÃ©es typÃ©es 
+                    // Création du flot d'entrée pour données typées 
                     DataOutputStream sortie = new DataOutputStream(out);
                     sortie.writeUTF(nom);
                     sortie.close();
@@ -111,7 +123,5 @@ public class Serveur_manage {
             e.printStackTrace(System.out);
         }
     }
-    
-
-        
+     
 }

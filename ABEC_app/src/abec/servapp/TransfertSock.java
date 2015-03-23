@@ -3,13 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package abec_servapp;
+package abec.servapp;
 
+import abec.encryption.EncryptionKeys;
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import javax.crypto.spec.SecretKeySpec;
 /**
  *
  * @author Max
@@ -34,39 +38,32 @@ public class TransfertSock extends Thread {
         Serveur_manage serverManage = new Serveur_manage();
         InputStream in = null;
         DataInputStream entree = null;
-        getClientPublicKey();
-        sendMyPublicKey(serverManage);
+//        getClientPublicKey();
+//        sendMyPublicKey(serverManage);
         
         while(client.getConnexion()){
             try {
                 in = client.getSocket().getInputStream();
-                entree = new DataInputStream(in);
-                String readMsg = entree.readUTF();
-                /*
-                Debug
-                */
-                System.out.println("Entry Message : "+readMsg);
-                /*
-                Debug
-                */
+                entree = new DataInputStream(in);               
                 
                 String msg;
                 try{
-                    byte[] decryptedMsg = EncryptionKeys.decrypt(readMsg.getBytes(), server.getKeys().getPrivate());
-                    msg = new String(decryptedMsg);
+                    String readMsg = entree.readUTF();
                     
-                    /*
-                    DEBUG
-                    */
-                    System.out.println(msg);
-                    /*
-                    DEBUG
-                    */
+                    msg = EncryptionKeys.decryptString(readMsg, serverManage.getClefDuJour());
                     
-                    // FIRST CONNEXION OF THE CLIEN
+                    // FIRST CONNEXION OF THE CLIENT
                     if (!msg.contains("--Send file :")) {
                         serverManage.sendMessage(this.server, this.client, msg);
                         System.out.println("Send :   " + msg);
+                    }
+                    else if (msg.contains("--ChangeName:")){this.server.getHashMap().get(client.getNumClient()).setPseudo(msg.substring(12));}
+                    
+                    else if (msg.contains(" --getUserList:")){
+                    	serverManage.sendMessage(server, client, String.valueOf(this.server.getHashMap().size()));
+                    	for(Client_info cli : this.server.getHashMap().values()){
+                    		serverManage.sendMessage(server, cli, cli.getPseudo());
+                    	}
                     }
                     else{
                          serverManage.sendMessage(server, client, msg);
@@ -107,8 +104,12 @@ public class TransfertSock extends Thread {
             try{
                 in = client.getSocket().getInputStream();
                 entree = new DataInputStream(in);
-                byte[] readMsg = entree.readUTF().getBytes();
+                String messageAsString = entree.readUTF();
+                
+                byte[] readMsg = EncryptionKeys.hexStringToByteArray(messageAsString);                        
+                
                 client.setPk(EncryptionKeys.getPublicKeyFromByteArray(readMsg));
+                
             }catch(NoSuchAlgorithmException | InvalidKeySpecException | IOException e)
             {
                 client.setConnexion(false);
@@ -116,11 +117,12 @@ public class TransfertSock extends Thread {
             }
         }
     } 
-    
+  
     public void sendMyPublicKey(Serveur_manage server_manage){
         
         if(client.getConnexion()){
-            server_manage.sendMessageUnencrypted(server, client, new String(ABEC_servApp.server.getKeys().getPublic().getEncoded()));
+        	System.out.println("----sendServerKey------");
+            server_manage.sendMessageUnencrypted(server, client, EncryptionKeys.retrieveKey(server.getKeys().getPublic().getEncoded()));
         }
     }
 }

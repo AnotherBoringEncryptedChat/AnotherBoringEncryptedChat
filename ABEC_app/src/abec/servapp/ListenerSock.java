@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package abec_servapp;
+package abec.servapp;
 import java.net.*;
 import java.io.*;
+import java.util.UUID;
 
 /**
  *
@@ -31,23 +32,29 @@ public class ListenerSock extends Thread{
                 transfer_socket = this.serveur.getServerSocket().accept();
                 System.out.println("CONNEXION CLIENT");
             }catch(IOException e){e.printStackTrace(System.out);}
+            
             Client_info client = new Client_info();
             client.setSocket(transfer_socket);
-            this.getNameInInputClient();
+            client = this.getNameInInputClient(client);
             this.serveur.getHashMap().put(client.getNumClient(),client);
             System.out.println(" HASHMAP.put(client)");        
             TransfertSock ThTransfert = new TransfertSock(this.serveur, client);
             ThTransfert.start();
         }
     }
-    public Client_info getNameInInputClient() {
+    
+    public Client_info getNameInInputClient(Client_info client) {
         System.out.println("---------------------- getNameInputClient()");
-        Client_info client = new Client_info();
         try {
             InputStream in = transfer_socket.getInputStream();
             DataInputStream sortie = new DataInputStream(in);
+//            System.out.println(sortie.readUTF());
+            UUID uuid = UUID.fromString(sortie.readUTF());
+            System.out.println("uuid :"+ uuid.toString());
             String pseudo = sortie.readUTF();
+            System.out.println("nom :"+ pseudo);
             client.setPseudo(pseudo);
+            client.setNumClient(uuid);
             client.setSocket(transfer_socket);
         } catch (Exception e) {
            e.printStackTrace(System.out);

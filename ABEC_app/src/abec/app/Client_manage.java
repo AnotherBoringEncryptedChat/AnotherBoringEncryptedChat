@@ -1,25 +1,62 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package abec_app;
+package abec.app;
 
+import abec.encryption.ClefDuJour;
+import abec.encryption.EncryptionKeys;
 import java.io.*;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import javax.swing.*;
 
-/**
- *
- * @author Max
- */
 public class Client_manage{
-    
-    public Client_manage(){}
+	
+	private PublicKey serverPublicKey;
+        private String clefDuJour;
+	
+    public Client_manage(){
+        ClefDuJour clefsDuJour = new ClefDuJour();
+        clefsDuJour.generateKeys();
+        
+        clefDuJour = clefsDuJour.getKeyOfTheDay();
+    }
+
+    public PublicKey getServerPublicKey() {
+        return serverPublicKey;
+    }
+
+    public void setServerPublicKey(PublicKey serverPublicKey) {
+        this.serverPublicKey = serverPublicKey;
+    }
     
     ////////////////////////////////////////////////////////////////////////////////
     // Envoi de message sur la socket 
     public void sendMessage(Client_info client,String msg) {
         System.out.println("---------------------- sendMessage()");
+        try {
+            // Recuperation of output stream
+            OutputStream out = client.getSocket().getOutputStream();
+            DataOutputStream sortie = new DataOutputStream(out);
+            
+            String encryptedMsg = EncryptionKeys.encryptString(msg, this.clefDuJour);
+            sortie.writeUTF(encryptedMsg);
+            
+            
+            System.out.println("Send :   " + msg);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+    }
+    
+    public void sendUnencryptedMessage(Client_info client, String msg) {
+        System.out.println("---------------------- sendUnencryptedMessage()");
         try {
             // Recuperation of output stream
             OutputStream out = client.getSocket().getOutputStream();
@@ -35,11 +72,42 @@ public class Client_manage{
     public String ReceiveMessage(Client_info client){
         String msg = null;
         System.out.println("---------------------- ReceiveMessage()");
-        //String msg_decode = null;
+
         try {
             DataInputStream entree = new DataInputStream(client.getSocket().getInputStream());
-            msg = entree.readUTF();
+            msg = EncryptionKeys.decryptString(entree.readUTF(), this.clefDuJour);
         }catch(IOException e){e.printStackTrace(System.out);}
+        System.out.println("Receive :   " + msg);
+        return msg; 
+    }
+    
+    public String ReceiveEncryptedMessage(Client_info client){
+        String msg = null;
+        System.out.println("---------------------- ReceiveEncryptedMessage()");
+
+        try {
+            DataInputStream entree = new DataInputStream(client.getSocket().getInputStream());
+            String readMsg = entree.readUTF();
+            byte[] decryptedAESKey = EncryptionKeys.decrypt(readMsg.getBytes(), client.getKeys().getPrivate());
+            SecretKeySpec ks = new SecretKeySpec(decryptedAESKey,"AES");
+            //On lit le message crypté avec AES
+            readMsg = entree.readUTF();
+            byte[] decryptedMSG = EncryptionKeys.decryptAES(readMsg.getBytes(), ks);
+
+            msg = new String(decryptedMSG);
+        }catch(IOException e){e.printStackTrace(System.out);} catch (NoSuchAlgorithmException ex) {
+                ex.printStackTrace();
+            } catch (NoSuchPaddingException ex) {
+                ex.printStackTrace();
+            } catch (InvalidKeyException ex) {
+                ex.printStackTrace();
+            } catch (IllegalBlockSizeException ex) {
+                ex.printStackTrace();
+            } catch (BadPaddingException ex) {
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         System.out.println("Receive :   " + msg);
         return msg; 
     }
@@ -54,6 +122,8 @@ public class Client_manage{
             FileInputStream fo = new FileInputStream(f);
 
             if (f.length() <= TAILLE_MAX) {
+            	System.out.println(f.getName());
+            	System.out.println(f.length());
                 out.writeUTF("--Send file :");
                 out.writeUTF(f.getName());
                 out.writeLong(f.length());
@@ -79,10 +149,7 @@ public class Client_manage{
         JFileChooser jfc = new JFileChooser();
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnfile = jfc.showSaveDialog(null);
-        //File rep = jfl.getSelectedFile();
-        /*if (!rep.exists()) {
-         rep.mkdirs();
-         }*/
+
         if (returnfile != JFileChooser.APPROVE_OPTION){
             File file = new File(jfc.getSelectedFile().getPath() + "//" + fname);
             FileOutputStream fileOut = null;
@@ -103,4 +170,6 @@ public class Client_manage{
             System.out.println("File received for : " + client.getPseudo());
         }
     }
+
+
 }
